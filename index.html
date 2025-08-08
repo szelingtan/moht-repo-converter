@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOHT Project Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+            <header>
+        <h1>Meet Callie,</h1>
+        <p>Your super agent to support with converting between form fields and HTML</p>
+    </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('form-to-html')">Form to HTML</button>
+            <button class="tab-button" onclick="showTab('html-to-form')">HTML to Form</button>
+            <button class="tab-button" onclick="showTab('user-guide')">User Guide</button>
+        </div>
+
+        <!-- Form to HTML Tab -->
+        <div id="form-to-html" class="tab-content active">
+            <div class="main-content">
+                <div class="form-section">
+                    <h2>Project Details</h2>
+                    <form id="project-form">
+                        <div class="form-group">
+                            <label for="title">Title:</label>
+                            <input type="text" id="title" name="title" placeholder="Enter project title">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="poc">POC (Point of Contact):</label>
+                            <input type="email" id="poc" name="poc" placeholder="Enter email address">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="partners">Partners:</label>
+                            <input type="text" id="partners" name="partners" placeholder="Enter partners">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="intent">Intent:</label>
+                            <select id="intent" name="intent">
+                                <option value="">Select intent</option>
+                                <option value="Admission">Admission</option>
+                                <option value="Discharge">Discharge</option>
+                                <option value="Transfer">Transfer</option>
+                                <option value="Treatment">Treatment</option>
+                                <option value="Prevention">Prevention</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="status">Status:</label>
+                            <select id="status" name="status">
+                                <option value="">Select status</option>
+                                <option value="Standard Care">Standard Care</option>
+                                <option value="Enhanced Care">Enhanced Care</option>
+                                <option value="Pilot">Pilot</option>
+                                <option value="Completed">Completed</option>
+                                <option value="In Progress">In Progress</option>
+                            </select>
+                        </div>
+
+                        <h3>Project Summary</h3>
+                        
+                        <div class="form-group">
+                            <label for="project-dates">Project Dates:</label>
+                            <input type="text" id="project-dates" name="project-dates" placeholder="e.g., October 2018 - March 2019">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sample-size">Sample Size:</label>
+                            <textarea id="sample-size" name="sample-size" rows="3" placeholder="Describe the sample size and scope"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reason">Reason for Action:</label>
+                            <textarea id="reason" name="reason" rows="3" placeholder="Explain the reason for this project"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="objectives">Aim / Objective:</label>
+                            <textarea id="objectives" name="objectives" rows="5" placeholder="Enter objectives (one per line for bullet points)"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="stakeholders">Stakeholders:</label>
+                            <textarea id="stakeholders" name="stakeholders" rows="3" placeholder="List all stakeholders"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="interventions">Interventions:</label>
+                            <textarea id="interventions" name="interventions" rows="8" placeholder="Describe interventions (use numbered format for ordered list)"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="outcomes">Outcomes:</label>
+                            <textarea id="outcomes" name="outcomes" rows="8" placeholder="Describe outcomes (use numbered format for ordered list)"></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" onclick="generateHTML()">Generate HTML</button>
+                            <button type="button" onclick="clearForm()">Clear Form</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="preview-section">
+                    <h2>Preview & Generated HTML</h2>
+                    <div class="preview-controls">
+                        <button onclick="copyHTML()">Copy HTML</button>
+                        <button onclick="downloadHTML()">Download HTML</button>
+                    </div>
+                    <div id="preview-container">
+                        <div id="html-preview">
+                            <!-- Generated preview will appear here -->
+                        </div>
+                    </div>
+                    <div class="html-code">
+                        <h3>Generated HTML Code:</h3>
+                        <textarea id="html-output" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HTML to Form Tab -->
+        <div id="html-to-form" class="tab-content">
+            <div class="html-input-section">
+                <h2>Paste HTML Code</h2>
+                <textarea id="html-input" placeholder="Paste your HTML table code here..." rows="15"></textarea>
+                <div class="form-actions">
+                    <button type="button" onclick="parseHTML()">Parse to Form</button>
+                    <button type="button" onclick="clearHTMLInput()">Clear</button>
+                </div>
+                <div id="parse-error" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- User Guide Tab -->
+        <div id="user-guide" class="tab-content">
+            <div class="guide-section">
+                <h2>📚 How to use Callie</h2>
+                
+                <div class="guide-content">
+                    <div class="guide-item">
+                        <h3>🔄 Form to HTML</h3>
+                        <p>Convert your project details into properly formatted HTML tables:</p>
+                        <ol>
+                            <li><strong>Fill out the form:</strong> Enter your project details in the form fields on the left</li>
+                            <li><strong>Watch the preview:</strong> The HTML preview updates automatically as you type</li>
+                            <li><strong>Copy or download:</strong> Use the "Copy HTML" button to copy to clipboard, or "Download HTML" to save as a file</li>
+                        </ol>
+                        <div class="tip">
+                            <strong>💡 Tips:</strong>
+                            <ul>
+                                <li>For objectives, interventions, and outcomes: Enter each point on a new line to create bullet/numbered lists</li>
+                                <li>Email addresses in the POC field automatically become clickable mailto links</li>
+                                <li>The preview updates in real-time, so you can see changes immediately</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="guide-item">
+                        <h3>📋 HTML to Form</h3>
+                        <p>Convert existing HTML tables back to editable form fields:</p>
+                        <ol>
+                            <li><strong>Switch to "HTML to Form" tab:</strong> Click the tab at the top</li>
+                            <li><strong>Paste your HTML:</strong> Copy and paste your existing HTML table code</li>
+                            <li><strong>Parse the HTML:</strong> Click "Parse to Form" to extract the data</li>
+                            <li><strong>Edit and regenerate:</strong> You'll be redirected to the form tab where you can edit and regenerate</li>
+                        </ol>
+                        <div class="tip">
+                            <strong>💡 Tips:</strong>
+                            <ul>
+                                <li>Works with HTML tables that follow the MOHT project report format</li>
+                                <li>Automatically extracts bullet points and numbered lists back to text format</li>
+                                <li>Handles email links and converts them back to plain email addresses</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="guide-item">
+                        <h3>📊 Understanding the Form Fields</h3>
+                        <div class="field-guide">
+                            <h4>Project Details Section:</h4>
+                            <ul>
+                                <li><strong>Title:</strong> The main project name/title</li>
+                                <li><strong>POC:</strong> Point of Contact email address</li>
+                                <li><strong>Partners:</strong> Organizations or departments involved</li>
+                                <li><strong>Intent:</strong> Primary purpose (Admission, Discharge, etc.)</li>
+                                <li><strong>Status:</strong> Current project status</li>
+                            </ul>
+                            
+                            <h4>Project Summary Section:</h4>
+                            <ul>
+                                <li><strong>Project Dates:</strong> Timeline (e.g., "October 2018 - March 2019")</li>
+                                <li><strong>Sample Size:</strong> Scope and scale of the project</li>
+                                <li><strong>Reason for Action:</strong> Why this project was needed</li>
+                                <li><strong>Aim/Objective:</strong> Project goals (each line becomes a bullet point)</li>
+                                <li><strong>Stakeholders:</strong> All parties involved or affected</li>
+                                <li><strong>Interventions:</strong> Actions taken (each line becomes numbered)</li>
+                                <li><strong>Outcomes:</strong> Results achieved (each line becomes numbered)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="guide-item">
+                        <h3>🎨 HTML Output Format</h3>
+                        <p>The generated HTML follows the standard MOHT format:</p>
+                        <ul>
+                            <li><strong>Responsive tables:</strong> Work on all device sizes</li>
+                            <li><strong>Proper styling:</strong> Alternating row colors and consistent formatting</li>
+                            <li><strong>Professional appearance:</strong> Ready for reports and presentations</li>
+                            <li><strong>Email integration:</strong> POC emails become clickable links</li>
+                            <li><strong>List formatting:</strong> Automatic bullet points and numbering</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-item">
+                        <h3>❓ Troubleshooting</h3>
+                        <div class="troubleshooting">
+                            <h4>Common Issues:</h4>
+                            <ul>
+                                <li><strong>HTML parsing fails:</strong> Ensure your HTML is valid and follows table structure</li>
+                                <li><strong>Lists not formatting:</strong> Put each item on a new line in text areas</li>
+                                <li><strong>Email not clickable:</strong> Ensure valid email format in POC field</li>
+                                <li><strong>Copy not working:</strong> Modern browsers required for clipboard access</li>
+                            </ul>
+                            
+                            <h4>Browser Requirements:</h4>
+                            <ul>
+                                <li>Chrome/Chromium (recommended)</li>
+                                <li>Firefox</li>
+                                <li>Safari</li>
+                                <li>Edge</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="guide-item">
+                        <h3>🚀 Quick Start Example</h3>
+                        <div class="example">
+                            <p>Try this sample data to see how it works:</p>
+                            <button onclick="loadSampleData()" class="sample-button">Load Sample Project Data</button>
+                            <p><em>This will fill the form with example data so you can see the converter in action.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

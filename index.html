@@ -42,13 +42,38 @@
                         
                         <div class="form-group">
                             <label for="category">Category:</label>
-                            <select id="category" name="category">
-                                <option value="">Select category</option>
-                                <option value="Admission">Admission</option>
-                                <option value="Inpatient">Inpatient</option>
-                                <option value="Discharge">Discharge</option>
-                                <option value="Workflows">Workflows</option>
-                            </select>
+                            <div class="multi-select-container">
+                                <div class="multi-select-button" id="category-button" onclick="toggleCategoryDropdown()">
+                                    <span id="category-display">Select categories...</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </div>
+                                <div class="multi-select-dropdown" id="category-dropdown">
+                                    <div class="category-option">
+                                        <input type="checkbox" id="cat-admission" value="Admission" onchange="updateCategorySelection()">
+                                        <label for="cat-admission">Admission</label>
+                                    </div>
+                                    <div class="category-option">
+                                        <input type="checkbox" id="cat-inpatient" value="Inpatient" onchange="updateCategorySelection()">
+                                        <label for="cat-inpatient">Inpatient</label>
+                                    </div>
+                                    <div class="category-option">
+                                        <input type="checkbox" id="cat-discharge" value="Discharge" onchange="updateCategorySelection()">
+                                        <label for="cat-discharge">Discharge</label>
+                                    </div>
+                                    <div class="category-option">
+                                        <input type="checkbox" id="cat-workflows" value="Workflows" onchange="updateCategorySelection()">
+                                        <label for="cat-workflows">Workflows</label>
+                                    </div>
+                                    <div class="category-option other-option">
+                                        <div class="category-option-header">
+                                            <input type="checkbox" id="cat-other" value="Other" onchange="updateCategorySelection()">
+                                            <label for="cat-other">Other:</label>
+                                        </div>
+                                        <input type="text" id="category-other-text" placeholder="Please specify..." disabled oninput="updateCategorySelection()" onclick="event.stopPropagation()">
+                                    </div>
+                                </div>
+                                <div class="selected-tags" id="category-tags"></div>
+                            </div>
                         </div>
                         
                         <div class="form-group">
@@ -158,6 +183,7 @@
                                 <li>For objectives, interventions, and outcomes: Enter each point on a new line to create bullet/numbered lists</li>
                                 <li>Email addresses in the POC field automatically become clickable mailto links</li>
                                 <li>The preview updates in real-time, so you can see changes immediately</li>
+                                <li>Categories: Select multiple predefined options or use "Other" to specify custom categories</li>
                             </ul>
                         </div>
                     </div>
@@ -189,7 +215,7 @@
                                 <li><strong>Title:</strong> The main project name/title</li>
                                 <li><strong>POC:</strong> Point of Contact email address</li>
                                 <li><strong>Partners:</strong> Organizations or departments involved</li>
-                                <li><strong>Category:</strong> Primary purpose (Admission, Inpatient, Discharge, Workflows)</li>
+                                <li><strong>Category:</strong> Primary purpose - select multiple options (Admission, Inpatient, Discharge, Workflows) or specify custom categories</li>
                                 <li><strong>Status:</strong> Current project status</li>
                             </ul>
                             
@@ -204,18 +230,6 @@
                                 <li><strong>Outcomes:</strong> Results achieved (each line becomes numbered)</li>
                             </ul>
                         </div>
-                    </div>
-
-                    <div class="guide-item">
-                        <h3>🎨 HTML Output Format</h3>
-                        <p>The generated HTML follows the standard MOHT format:</p>
-                        <ul>
-                            <li><strong>Responsive tables:</strong> Work on all device sizes</li>
-                            <li><strong>Proper styling:</strong> Alternating row colors and consistent formatting</li>
-                            <li><strong>Professional appearance:</strong> Ready for reports and presentations</li>
-                            <li><strong>Email integration:</strong> POC emails become clickable links</li>
-                            <li><strong>List formatting:</strong> Automatic bullet points and numbering</li>
-                        </ul>
                     </div>
 
                     <div class="guide-item">

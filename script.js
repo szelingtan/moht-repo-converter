@@ -1,5 +1,132 @@
 // Global variables
 let currentFormData = {};
+let selectedCategories = [];
+let isUpdatingCategories = false; // Flag to prevent recursive calls
+
+// Multi-select category functionality
+function toggleCategoryDropdown() {
+    const button = document.getElementById('category-button');
+    const dropdown = document.getElementById('category-dropdown');
+    
+    button.classList.toggle('active');
+    dropdown.classList.toggle('open');
+}
+
+function updateCategorySelection() {
+    // Prevent recursive calls
+    if (isUpdatingCategories) return;
+    isUpdatingCategories = true;
+    
+    const checkboxes = document.querySelectorAll('#category-dropdown input[type="checkbox"]');
+    const otherText = document.getElementById('category-other-text');
+    const otherCheckbox = document.getElementById('cat-other');
+    
+    selectedCategories = [];
+    
+    // First, handle the "Other" text input - if there's text, auto-check the "Other" checkbox
+    const customText = otherText.value.trim();
+    if (customText) {
+        otherCheckbox.checked = true;
+        otherText.disabled = false;
+    }
+    
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            if (checkbox.value === 'Other') {
+                // Handle "Other" option - enable text input
+                otherText.disabled = false;
+                if (customText) {
+                    selectedCategories.push(customText);
+                }
+            } else {
+                // Handle predefined categories
+                selectedCategories.push(checkbox.value);
+            }
+        }
+    });
+    
+    // If other is unchecked and no text, disable the text input and clear it
+    if (!otherCheckbox.checked) {
+        otherText.disabled = true;
+        if (!customText) {
+            otherText.value = '';
+        }
+    }
+    
+    updateCategoryDisplay();
+    updateCategoryTags();
+    
+    // Reset the flag
+    isUpdatingCategories = false;
+}
+
+function updateCategoryDisplay() {
+    const display = document.getElementById('category-display');
+    
+    if (selectedCategories.length === 0) {
+        display.textContent = 'Select categories...';
+    } else if (selectedCategories.length === 1) {
+        display.textContent = selectedCategories[0];
+    } else {
+        display.textContent = `${selectedCategories.length} categories selected`;
+    }
+}
+
+function updateCategoryTags() {
+    const tagsContainer = document.getElementById('category-tags');
+    tagsContainer.innerHTML = '';
+    
+    selectedCategories.forEach((category, index) => {
+        const tag = document.createElement('div');
+        tag.className = 'category-tag';
+        tag.innerHTML = `
+            ${category}
+            <button type="button" class="remove-tag" onclick="removeCategory(${index})" title="Remove">×</button>
+        `;
+        tagsContainer.appendChild(tag);
+    });
+}
+
+function removeCategory(index) {
+    const categoryToRemove = selectedCategories[index];
+    selectedCategories.splice(index, 1);
+    
+    const predefinedCategories = ['Admission', 'Inpatient', 'Discharge', 'Workflows'];
+    
+    if (predefinedCategories.includes(categoryToRemove)) {
+        // Uncheck the corresponding predefined checkbox
+        const checkbox = document.querySelector(`#category-dropdown input[value="${categoryToRemove}"]`);
+        if (checkbox) {
+            checkbox.checked = false;
+        }
+    } else {
+        // This was a custom category from "Other"
+        // Check if there are any other custom categories remaining
+        const hasOtherCustomCategories = selectedCategories.some(cat => !predefinedCategories.includes(cat));
+        
+        if (!hasOtherCustomCategories) {
+            // No more custom categories, uncheck "Other" and clear/disable text input
+            document.getElementById('cat-other').checked = false;
+            document.getElementById('category-other-text').value = '';
+            document.getElementById('category-other-text').disabled = true;
+        }
+    }
+    
+    updateCategoryDisplay();
+    updateCategoryTags();
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const container = document.querySelector('.multi-select-container');
+    const button = document.getElementById('category-button');
+    const dropdown = document.getElementById('category-dropdown');
+    
+    if (container && !container.contains(event.target)) {
+        button.classList.remove('active');
+        dropdown.classList.remove('open');
+    }
+});
 
 // Tab functionality
 function showTab(tabName) {
@@ -39,7 +166,7 @@ function collectFormData() {
         title: document.getElementById('title').value,
         poc: document.getElementById('poc').value,
         partners: document.getElementById('partners').value,
-        category: document.getElementById('category').value,
+        category: selectedCategories.join(', '), // Join multiple categories
         status: document.getElementById('status').value,
         projectDates: document.getElementById('project-dates').value,
         sampleSize: document.getElementById('sample-size').value,
@@ -142,8 +269,55 @@ function formatAsList(text, listType) {
     return `<${listType} style="margin:0; padding-left:20px;">${listItems}</${listType}>`;
 }
 
+function populateCategories(categoryString) {
+    // Clear current selections
+    selectedCategories = [];
+    const checkboxes = document.querySelectorAll('#category-dropdown input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
+    document.getElementById('category-other-text').value = '';
+    document.getElementById('category-other-text').disabled = true;
+    
+    if (!categoryString) return;
+    
+    // Split categories by comma and trim whitespace
+    const categories = categoryString.split(',').map(cat => cat.trim()).filter(cat => cat);
+    const predefinedCategories = ['Admission', 'Inpatient', 'Discharge', 'Workflows'];
+    
+    categories.forEach(category => {
+        if (predefinedCategories.includes(category)) {
+            // Check the predefined category
+            const checkbox = document.querySelector(`#category-dropdown input[value="${category}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+                selectedCategories.push(category);
+            }
+        } else {
+            // This is a custom category - check "Other" and set the text
+            const otherCheckbox = document.getElementById('cat-other');
+            const otherText = document.getElementById('category-other-text');
+            otherCheckbox.checked = true;
+            otherText.value = category;
+            otherText.disabled = false;
+            selectedCategories.push(category);
+        }
+    });
+    
+    updateCategoryDisplay();
+    updateCategoryTags();
+}
+
 function clearForm() {
     document.getElementById('project-form').reset();
+    
+    // Clear category selections
+    selectedCategories = [];
+    const checkboxes = document.querySelectorAll('#category-dropdown input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
+    document.getElementById('category-other-text').value = '';
+    document.getElementById('category-other-text').disabled = true;
+    updateCategoryDisplay();
+    updateCategoryTags();
+    
     document.getElementById('html-preview').innerHTML = '';
     document.getElementById('html-output').value = '';
     currentFormData = {};
@@ -288,9 +462,14 @@ function extractListContent(element) {
 function populateForm(data) {
     // Populate form fields
     Object.keys(data).forEach(key => {
-        const element = document.getElementById(key.replace(/([A-Z])/g, '-$1').toLowerCase());
-        if (element && data[key]) {
-            element.value = data[key];
+        if (key === 'category') {
+            // Handle multi-select category
+            populateCategories(data[key]);
+        } else {
+            const element = document.getElementById(key.replace(/([A-Z])/g, '-$1').toLowerCase());
+            if (element && data[key]) {
+                element.value = data[key];
+            }
         }
     });
     

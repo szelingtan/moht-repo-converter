@@ -575,6 +575,48 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Sample data function for user guide
+function populateCategories(categoryString) {
+    // Clear existing selections
+    selectedCategories = [];
+    
+    // Uncheck all checkboxes
+    const checkboxes = document.querySelectorAll('#category-dropdown input[type="checkbox"]');
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+    
+    // Clear and disable the "Other" text input
+    const otherText = document.getElementById('category-other-text');
+    otherText.value = '';
+    otherText.disabled = true;
+    
+    if (!categoryString) return;
+    
+    // Split by comma and trim each category
+    const categories = categoryString.split(',').map(cat => cat.trim());
+    
+    const predefinedCategories = ['Admission', 'Inpatient', 'Discharge', 'Workflows'];
+    
+    categories.forEach(category => {
+        if (predefinedCategories.includes(category)) {
+            // Check the predefined checkbox
+            const checkbox = document.querySelector(`#category-dropdown input[value="${category}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+                selectedCategories.push(category);
+            }
+        } else {
+            // This is a custom category - use the "Other" option
+            const otherCheckbox = document.getElementById('cat-other');
+            otherCheckbox.checked = true;
+            otherText.disabled = false;
+            otherText.value = category;
+            selectedCategories.push(category);
+        }
+    });
+    
+    updateCategoryDisplay();
+    updateCategoryTags();
+}
+
 function loadSampleData() {
     // Sample data based on the original example
     const sampleData = {
@@ -600,8 +642,10 @@ Increase in number of discharges to community hospitals
 Enabled the cluster eco-system to strengthen its coordination and reframed its modus operandi from working-in-silos to shared ownership`
     };
     
-    // Populate form fields
+    // Populate form fields (excluding category which needs special handling)
     Object.keys(sampleData).forEach(key => {
+        if (key === 'category') return; // Skip category, handle it separately
+        
         const fieldId = key.replace(/([A-Z])/g, '-$1').toLowerCase();
         const element = document.getElementById(fieldId);
         if (element) {
@@ -612,6 +656,9 @@ Enabled the cluster eco-system to strengthen its coordination and reframed its m
     // Handle special field mappings
     document.getElementById('project-dates').value = sampleData.projectDates;
     document.getElementById('sample-size').value = sampleData.sampleSize;
+    
+    // Handle category with the special multi-select function
+    populateCategories(sampleData.category);
     
     // Switch to form tab and generate HTML
     showTabByName('form-to-html');

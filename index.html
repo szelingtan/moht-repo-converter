@@ -41,14 +41,13 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="intent">Intent:</label>
-                            <select id="intent" name="intent">
-                                <option value="">Select intent</option>
+                            <label for="category">Category:</label>
+                            <select id="category" name="category">
+                                <option value="">Select category</option>
                                 <option value="Admission">Admission</option>
+                                <option value="Inpatient">Inpatient</option>
                                 <option value="Discharge">Discharge</option>
-                                <option value="Transfer">Transfer</option>
-                                <option value="Treatment">Treatment</option>
-                                <option value="Prevention">Prevention</option>
+                                <option value="Workflows">Workflows</option>
                             </select>
                         </div>
                         
@@ -56,11 +55,10 @@
                             <label for="status">Status:</label>
                             <select id="status" name="status">
                                 <option value="">Select status</option>
+                                <option value="Planning">Planning</option>
                                 <option value="Standard Care">Standard Care</option>
-                                <option value="Enhanced Care">Enhanced Care</option>
-                                <option value="Pilot">Pilot</option>
-                                <option value="Completed">Completed</option>
-                                <option value="In Progress">In Progress</option>
+                                <option value="Ongoing">Ongoing</option>
+                                <option value="Continued">Continued</option>
                             </select>
                         </div>
 
@@ -191,7 +189,7 @@
                                 <li><strong>Title:</strong> The main project name/title</li>
                                 <li><strong>POC:</strong> Point of Contact email address</li>
                                 <li><strong>Partners:</strong> Organizations or departments involved</li>
-                                <li><strong>Intent:</strong> Primary purpose (Admission, Discharge, etc.)</li>
+                                <li><strong>Category:</strong> Primary purpose (Admission, Inpatient, Discharge, Workflows)</li>
                                 <li><strong>Status:</strong> Current project status</li>
                             </ul>
                             

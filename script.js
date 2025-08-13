@@ -39,7 +39,7 @@ function collectFormData() {
         title: document.getElementById('title').value,
         poc: document.getElementById('poc').value,
         partners: document.getElementById('partners').value,
-        intent: document.getElementById('intent').value,
+        category: document.getElementById('category').value,
         status: document.getElementById('status').value,
         projectDates: document.getElementById('project-dates').value,
         sampleSize: document.getElementById('sample-size').value,
@@ -55,7 +55,7 @@ function createHTMLTables(data) {
     const projectDetailsTable = `<h3>Project Details:</h3>
 <table style="width:100%; border-collapse: collapse; font-family: Arial, sans-serif;">
   <tr style="background-color:#E6E6FA;">
-    <th style="width:25%; border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px;">Category</th>
+    <th style="width:25%; border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px;">Item</th>
     <th style="width:75%; border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px;">Details</th>
   </tr>
   <tr style="background-color:#f2f2f2;">
@@ -71,8 +71,8 @@ function createHTMLTables(data) {
     <td style="border: 1px solid #ddd; padding: 12px; font-size: 14px;">${data.partners}</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #ddd; padding: 12px; font-size: 14px;"><b>Intent</b></td>
-    <td style="border: 1px solid #ddd; padding: 12px; font-size: 14px;">${data.intent}</td>
+    <td style="border: 1px solid #ddd; padding: 12px; font-size: 14px;"><b>Category</b></td>
+    <td style="border: 1px solid #ddd; padding: 12px; font-size: 14px;">${data.category}</td>
   </tr>
   <tr style="background-color:#f2f2f2;">
     <td style="border: 1px solid #ddd; padding: 12px; font-size: 14px;"><b>Status</b></td>
@@ -83,7 +83,7 @@ function createHTMLTables(data) {
     const projectSummaryTable = `<h3>Project Summary:</h3>
 <table style="width:100%; border-collapse: collapse; font-family: Arial, sans-serif;">
   <tr style="background-color:#ADD8E6;">
-    <th style="width:25%; border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px;">Category</th>
+    <th style="width:25%; border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px;">Item</th>
     <th style="width:75%; border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px;">Details</th>
   </tr>
   <tr style="background-color:#f2f2f2;">
@@ -240,8 +240,8 @@ function extractDataFromHTML(doc) {
                     case 'partners':
                         data.partners = details.textContent.trim();
                         break;
-                    case 'intent':
-                        data.intent = details.textContent.trim();
+                    case 'category':
+                        data.category = details.textContent.trim();
                         break;
                     case 'status':
                         data.status = details.textContent.trim();
@@ -402,7 +402,7 @@ function loadSampleData() {
         title: 'Enhancing Transfers to Community Hospitals via Fast Track & Communication Redesign',
         poc: 'li_huan_teo@ttsh.com.sg',
         partners: 'Acute hospitals',
-        intent: 'Admission',
+        category: 'Admission',
         status: 'Standard Care',
         projectDates: 'October 2018 - March 2019',
         sampleSize: 'From General Medicine and Geriatric Medicine disciplines only, to hospital wide roll-out by October 2018.',

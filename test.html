@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Module Test</title>
+</head>
+<body>
+    <h1>Module Test</h1>
+    <div id="test-results"></div>
+
+    <!-- Load all modules in order -->
+    <script src="js/config.js"></script>
+    <script src="js/managers/CategoryManager.js"></script>
+    <script src="js/managers/FormDataManager.js"></script>
+    <script src="js/managers/UIManager.js"></script>
+    <script src="js/managers/TabManager.js"></script>
+    <script src="js/managers/EventManager.js"></script>
+    <script src="js/generators/HTMLGenerator.js"></script>
+    <script src="js/parsers/HTMLParser.js"></script>
+    <script src="js/MOHTProjectConverter.js"></script>
+
+    <script>
+        // Test that all classes are available
+        const results = [];
+        
+        try {
+            // Test configuration
+            if (typeof CONFIG !== 'undefined' && typeof SELECTORS !== 'undefined') {
+                results.push('✅ Configuration loaded successfully');
+            } else {
+                results.push('❌ Configuration failed to load');
+            }
+            
+            // Test classes can be instantiated
+            const categoryManager = new CategoryManager();
+            results.push('✅ CategoryManager created successfully');
+            
+            const formDataManager = new FormDataManager(categoryManager);
+            results.push('✅ FormDataManager created successfully');
+            
+            const htmlGenerator = new HTMLGenerator();
+            results.push('✅ HTMLGenerator created successfully');
+            
+            const htmlParser = new HTMLParser();
+            results.push('✅ HTMLParser created successfully');
+            
+            const uiManager = new UIManager();
+            results.push('✅ UIManager created successfully');
+            
+            const tabManager = new TabManager();
+            results.push('✅ TabManager created successfully');
+            
+            // Create a mock app object for EventManager
+            const mockApp = {
+                categoryManager,
+                formDataManager,
+                htmlGenerator,
+                htmlParser,
+                uiManager,
+                tabManager
+            };
+            
+            const eventManager = new EventManager(mockApp);
+            results.push('✅ EventManager created successfully');
+            
+            const app = new MOHTProjectConverter();
+            results.push('✅ MOHTProjectConverter created successfully');
+            
+            results.push('🎉 All modules loaded and working correctly!');
+            
+        } catch (error) {
+            results.push('❌ Error: ' + error.message);
+        }
+        
+        document.getElementById('test-results').innerHTML = results.join('<br>');
+    </script>
+</body>
+</html>

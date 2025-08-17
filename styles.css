@@ -104,14 +104,21 @@ header p {
 
 /* Main content layout */
 .main-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
     min-height: 600px;
 }
 
+/* Form and preview grid layout */
+.form-preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
 @media (max-width: 1024px) {
-    .main-content {
+    .form-preview-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -140,22 +147,28 @@ header p {
 .form-section h3 {
     color: #334155;
     margin: 32px 0 20px 0;
+    padding-bottom: 16px;
+    border-bottom: 3px solid;
+    border-image: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%) 1;
     font-size: 20px;
     font-weight: 600;
-    position: relative;
-    padding-left: 20px;
 }
 
-.form-section h3::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 20px;
-    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
-    border-radius: 2px;
+/* Spacing between project sections */
+#project-summary-section {
+    margin-top: 32px;
+}
+
+/* Boost entire project details section when category dropdown is open */
+#project-details-section:has(.multi-select-container.active) {
+    z-index: 1000;
+    position: relative;
+}
+
+/* Fallback for browsers without :has() support */
+#project-details-section.dropdown-active {
+    z-index: 1000;
+    position: relative;
 }
 
 .form-group {
@@ -213,6 +226,20 @@ header p {
 /* Multi-select category component */
 .multi-select-container {
     position: relative;
+    z-index: 1;
+}
+
+.multi-select-container.active {
+    z-index: 10000;
+}
+
+/* Specific high z-index for category dropdown to ensure it's above project summary */
+#category-dropdown.open {
+    z-index: 10001 !important;
+}
+
+#partner-dropdown.open {
+    z-index: 10001 !important;
 }
 
 .multi-select-button {
@@ -243,7 +270,12 @@ header p {
 }
 
 .dropdown-arrow {
-    color: #6b7280;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px;
     transition: transform 0.3s ease;
 }
 
@@ -260,16 +292,17 @@ header p {
     border: 2px solid #e5e7eb;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 9999;
     max-height: 0;
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
     margin-top: 4px;
 }
 
 .multi-select-dropdown.open {
     max-height: 300px;
     border-color: #0891b2;
+    overflow: visible;
 }
 
 .category-option {
@@ -290,6 +323,9 @@ header p {
     margin: 0;
     padding: 0;
     cursor: pointer;
+    border: none;
+    box-shadow: none;
+    text-decoration: none;
 }
 
 .category-option label {
@@ -298,6 +334,10 @@ header p {
     flex: 1;
     font-size: 14px;
     font-weight: 500;
+    text-decoration: none;
+    border: none;
+    box-shadow: none;
+    background: none;
 }
 
 .other-option {
@@ -311,6 +351,14 @@ header p {
     align-items: center;
     gap: 8px;
     width: 100%;
+    cursor: pointer;
+    padding: 4px 0;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.other-option .category-option-header:hover {
+    background-color: rgba(8, 145, 178, 0.05);
 }
 
 .other-option input[type="text"] {
@@ -372,6 +420,52 @@ header p {
     opacity: 1;
 }
 
+/* Mode toggle styling */
+.mode-toggle {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    width: fit-content;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mode-toggle-button {
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 80px;
+}
+
+.mode-toggle-button:hover {
+    background: rgba(8, 145, 178, 0.1);
+    color: #0891b2;
+}
+
+.mode-toggle-button.active {
+    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+    color: white;
+    box-shadow: 0 2px 4px rgba(8, 145, 178, 0.2);
+}
+
+.mode-toggle-button.active:hover {
+    background: linear-gradient(135deg, #0782a3 0%, #0891b2 100%);
+    color: white;
+}
+
+/* Form section transitions */
+.form-section {
+    transition: all 0.3s ease;
+}
+
 /* Form actions */
 .form-actions {
     display: flex;
@@ -390,6 +484,8 @@ header p {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    min-width: 200px;
+    width: 100%;
 }
 
 .form-actions button::before {
@@ -494,15 +590,26 @@ header p {
     box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
 }
 
-.preview-controls button:last-child {
+.preview-controls button:nth-child(2) {
     background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
     color: white;
     box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3);
 }
 
-.preview-controls button:last-child:hover {
+.preview-controls button:nth-child(2):hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+}
+
+.preview-controls button:last-child {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+    box-shadow: 0 6px 16px rgba(107, 114, 128, 0.3);
+}
+
+.preview-controls button:last-child:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(107, 114, 128, 0.4);
 }
 
 #preview-container {
@@ -571,6 +678,20 @@ header p {
     border-image: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%) 1;
     font-size: 24px;
     font-weight: 600;
+}
+
+.input-note {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1px solid #bfdbfe;
+    border-left: 4px solid #3b82f6;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-top: 12px;
+    margin-bottom: 28px;
+    color: #1e40af;
+    font-size: 14px;
+    line-height: 1.4;
+    font-style: italic;
 }
 
 #html-input {
@@ -828,6 +949,27 @@ header p {
     margin-bottom: 0;
 }
 
+.mode-info {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 2px solid #bfdbfe;
+    border-left: 6px solid #3b82f6;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+.mode-info strong {
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.mode-info ul {
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
 .field-guide {
     background: rgba(255, 255, 255, 0.8);
     padding: 24px;
@@ -974,4 +1116,103 @@ select:focus-visible,
 textarea:focus-visible {
     outline: 3px solid rgba(8, 145, 178, 0.5);
     outline-offset: 2px;
+}
+
+/* Toast notifications */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    min-width: 320px;
+    max-width: 420px;
+    transform: translateX(450px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.toast::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.toast-error::before {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    position: relative;
+}
+
+.toast-icon {
+    font-size: 20px;
+    font-weight: bold;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast-success .toast-icon {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.toast-error .toast-icon {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: white;
+}
+
+.toast-message {
+    color: #1f2937;
+    font-weight: 600;
+    line-height: 1.5;
+    flex: 1;
+    font-size: 15px;
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .toast {
+        min-width: auto;
+        max-width: none;
+    }
 }
